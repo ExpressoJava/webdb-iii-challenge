@@ -87,16 +87,16 @@ server.post('/api/cohorts', async (req, res) => {
 // update 
 server.put('/api/cohorts/:id', async (req, res) => {
   try {
-    const count = await db('cohorts')
+    const cohortid = await db('cohorts')
       .where({ id: req.params.id })
       .update(req.body);
 
-    if (count > 0) {
-      const role = await db('cohorts')
+    if (cohortid > 0) {
+      const cohortid = await db('cohorts')
         .where({ id: req.params.id })
         .first()
 
-      res.status(200).json(role);
+      res.status(200).json(cohortid);
     } else {
       res.status(404).json({ message: 'Records not found' })
     }
@@ -106,11 +106,11 @@ server.put('/api/cohorts/:id', async (req, res) => {
 // remove cohort by id (inactivate the id)
 server.delete('/api/cohorts/:id', async (req, res) => {
   try {
-    const count = await db('cohorts')
+    const cohortid = await db('cohorts')
       .where({ id: req.params.id })
       .del();
 
-    if (count > 0) {
+    if (cohortid > 0) {
       res.status(204).end();
     } else {
       res.status(404).json({ message: 'Records not found' })
