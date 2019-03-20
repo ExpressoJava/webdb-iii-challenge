@@ -11,3 +11,8 @@ exports.seed = function(knex, Promise) {
       ])
     })
 }
+
+// to make this file:
+// npx knex seed:make [filename: ex 001-filename]
+// then 
+// npx knex seed: run  // to inject data into

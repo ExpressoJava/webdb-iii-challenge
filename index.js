@@ -19,7 +19,7 @@ server.use(express.json())
 
 // cohort endpoints
 server.get('/api/cohorts', async (req, res) => {
-  // get the roles from the database
+  // get the cohorts from the database
   try {
     const cohort = await db('cohorts') // all the records from the table
     res.status(200).json(cohort)
@@ -30,16 +30,30 @@ server.get('/api/cohorts', async (req, res) => {
 
 // list by id
 server.get('/api/cohorts/:id', async (req, res) => {
-  // get the roles from the database
+  // get the id from the database
   try {
-    const role = await db('cohorts')
+    const cohortid = await db('cohorts')
       .where({ id: req.params.id })
       .first();
-    res.status(200).json(role)
+    res.status(200).json(cohortid)
   } catch (error) {
     res.status(500).json(error)
   }
 })
+
+
+
+server.get("/api/cohorts/:id/students", async (req, res) => {
+  try {
+    const cohort = await db('cohorts')
+      .select("cohorts.id", "students.name")
+      .innerJoin("students", "cohorts.id", "students.cohort_id")
+      .where({ cohort_id: req.params.id });
+    res.status(200).json(cohort)
+  } catch (error) {
+    res.status(500).json(error)
+  }
+  });
 
 const errors = {
   '19': 'Another record with that value exists',
@@ -70,7 +84,7 @@ server.put('/api/cohorts/:id', async (req, res) => {
     if (count > 0) {
       const role = await db('cohorts')
         .where({ id: req.params.id })
-        .first();
+        .first()
 
       res.status(200).json(role);
     } else {
@@ -79,7 +93,7 @@ server.put('/api/cohorts/:id', async (req, res) => {
   } catch (error) {}
 })
 
-// remove roles (inactivate the role)
+// remove cohort by id (inactivate the id)
 server.delete('/api/cohorts/:id', async (req, res) => {
   try {
     const count = await db('cohorts')
